@@ -21,9 +21,6 @@ class BaseModel:
         :param *args: Argument list
         :param *kwargs: Keyword Argument dictionary
         """
-        # storage.reload()
-        # fixme: this line above causes recursion during creation of
-        #  model instance from json
         if kwargs is not None and kwargs != {}:
             for key in kwargs:
                 if key == "created_at":
