@@ -5,7 +5,7 @@ This is the main interface for the HBNB console
 import cmd
 
 
-class ABNBConsole(cmd.Cmd):
+class HBNBCommand(cmd.Cmd):
     intro = None
     prompt = '(hbnb) '
     """
@@ -13,5 +13,5 @@ class ABNBConsole(cmd.Cmd):
     """
 
 
-if __name__ == "__main__":
-    ABNBConsole.cmdloop()
+if __name__ == '__main__':
+    HBNBCommand().cmdloop()

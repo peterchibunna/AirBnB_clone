@@ -7,10 +7,7 @@ import json
 import os
 import uuid
 import datetime
-from models.engine.file_storage import FileStorage
-
-storage = FileStorage()
-# storage.reload()
+from models import storage
 
 
 class BaseModel:
@@ -66,6 +63,3 @@ class BaseModel:
         _dict['created_at'] = _dict['created_at'].isoformat()
         _dict['updated_at'] = _dict['updated_at'].isoformat()
         return _dict
-        # setattr(_dict, '__class__', type(self.__class__).__name__))
-        # setattr(_dict, 'created_at', _dict['created_at'].isoformat())
-        # setattr(_dict, 'updated_at', _dict['updated_at'].isoformat())
