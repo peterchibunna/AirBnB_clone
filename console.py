@@ -139,7 +139,7 @@ class HBNBCommand(cmd.Cmd):
                             print("** attribute value missing **")
                         elif parser[2] not in whitelist:
                             obj.__dict__[parser[2]] = parser[3]
-                            obj.update_at = datetime.now()
+                            obj.__dict__['updated_at'] = datetime.now()
                             storage.save()
                 else:
                     print("** no instance found **")
