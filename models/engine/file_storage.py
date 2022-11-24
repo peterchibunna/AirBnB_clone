@@ -18,10 +18,10 @@ class FileStorage(object):
         """gets all the objects as a dictionary"""
         return FileStorage.__objects
 
-    def new(self, o):
+    def new(self, obj):
         """Sets new obj in __objects dictionary."""
-        key = "{}.{}".format(type(o).__name__, o.id)
-        FileStorage.__objects[key] = o
+        key = "{}.{}".format(type(obj).__name__, o.id)
+        FileStorage.__objects[key] = obj
 
     def save(self):
         """writes serialized `__objects` to the JSON file."""
@@ -36,10 +36,13 @@ class FileStorage(object):
         from models.state import State
         from models.city import City
         from models.place import Place
+        from models.amenity import Amenity
+        from models.review import Review
 
         return {
             'BaseModel': BaseModel, 'User': User, 'State': State,
-            'City': City, 'Place': Place,
+            'City': City, 'Place': Place, 'Amenity': Amenity,
+            'Review': Review
         }
 
     def reload(self):
