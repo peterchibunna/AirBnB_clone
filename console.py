@@ -111,7 +111,7 @@ class HBNBCommand(cmd.Cmd):
                 if args[0] in key:
                     myList.append(str(storage.all()[key]))
             print("[", end="")
-            print(", ".join(all_objects), end="")
+            print(", ".join(myList), end="")
             print("]")
         else:
             print("** class doesn't exist **")
