@@ -24,21 +24,21 @@ class HBNBCommand(cmd.Cmd):
     """hbnb command prompt"""
     prompt = '(hbnb) '
 
-    def EOF(self, arg):
+    def do_EOF(self, arg):
         """Exits the program"""
         quit()
         return (1)
 
-    def quit(self, arg):
+    def do_quit(self, arg):
         """Exits the program"""
         quit()
         return (1)
 
-    def help(self, args):
+    def do_help(self, args):
         """Gives details about commands"""
-        cmd.Cmd.help(self, args)
+        cmd.Cmd.do_help(self, args)
 
-    def create(self, arg):
+    def do_create(self, arg):
         """Creates new instance of BaseModel"""
         args = shlex.split(arg)
         if len(args) == 0:
@@ -52,7 +52,7 @@ class HBNBCommand(cmd.Cmd):
         print(inst.id)
         inst.save()
 
-    def show(self, arg):
+    def do_show(self, arg):
         """
         Prints string representation of an instance
         based on the class name and id
@@ -73,7 +73,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** class doesn't exist **")
 
-    def destroy(self, arg):
+    def do_destroy(self, arg):
         """
         Deletes an instance based on class name and id
         """
@@ -93,7 +93,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("**class doesn't exist **")
 
-    def all(self, arg):
+    def do_all(self, arg):
         """
         Prints all string representation of all instances
         based or not on the class name
@@ -116,7 +116,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** class doesn't exist **")
 
-    def update(self, arg):
+    def do_update(self, arg):
         """
         Updates an instance based on the class name and id
         by adding or updating attribute
