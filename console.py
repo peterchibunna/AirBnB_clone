@@ -16,9 +16,26 @@ from models.amenity import Amenity
 from models.review import Review
 from models.state import State
 
-
 classes = {'BaseModel': BaseModel, 'User': User, 'City': City, 'Place': Place,
            'Review': Review, 'State': State, 'Amenity': Amenity}
+
+
+def eval_args(args):
+    check_for_dictionary = re.search(r"\{(.*?)\}", args)
+    check_for_list = re.search(r"\[(.*?)\]", args)
+    if check_for_dictionary is None:
+        if check_for_list is None:
+            return [i.strip(",") for i in shlex.split(args)]
+        else:
+            r = shlex.split(args[:check_for_list.span()[0]])
+            return_list = [i.strip(",") for i in r]
+            return_list.append(check_for_list.group())
+            return return_list
+    else:
+        r = shlex.split(args[:check_for_dictionary.span()[0]])
+        return_list = [i.strip(",") for i in r]
+        return_list.append(check_for_dictionary.group())
+        return return_list
 
 
 class HBNBCommand(cmd.Cmd):
@@ -46,8 +63,7 @@ class HBNBCommand(cmd.Cmd):
                     call = "{} {}".format(arg1[0], command[1])
                     return methods[command[0]](call)
 
-        print("*** Unknown syntax: {}".format(arg))
-        return False
+        return cmd.Cmd.default(self, arg)
 
     def do_EOF(self, arg):
         """Exits the program"""
@@ -107,7 +123,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         elif args[0] in classes:
             if len(args) > 1:
-                key = args[0] + "." + args[1]
+                key = args[0] + "." + args[1].replace(",", "")
                 if key in storage.all():
                     storage.all().pop(key)
                     storage.save()
@@ -124,19 +140,19 @@ class HBNBCommand(cmd.Cmd):
         based or not on the class name
         """
         args = shlex.split(arg)
-        myList = list()
+        my_list = list()
         if len(args) == 0:
             for k in storage.all().values():
-                myList.append(str(k))
+                my_list.append(str(k))
             print("[", end="")
-            print(", ".join(myList), end="")
+            print(", ".join(my_list), end="")
             print("]")
         elif args[0] in classes:
             for key in storage.all():
                 if args[0] in key:
-                    myList.append(str(storage.all()[key]))
+                    my_list.append(str(storage.all()[key]))
             print("[", end="")
-            print(", ".join(myList), end="")
+            print(", ".join(my_list), end="")
             print("]")
         else:
             print("** class doesn't exist **")
@@ -146,38 +162,63 @@ class HBNBCommand(cmd.Cmd):
         Updates an instance based on the class name and id
         by adding or updating attribute
         """
-        args = shlex.split(arg)
-
-        if len(args) == 0:
+        args2 = eval_args(arg)
+        objects = storage.all()
+        print(args2)
+        if len(args2) == 0:
             print("** class name missing **")
-        elif args[0] in classes:
-            if len(args) > 1:
-                key = args[0] + "." + args[1]
-                if key in storage.all():
-                    obj = storage.all()[key]
-                    whitelist = ['created_at', 'updated_at', 'id']
-                    if obj:
-                        parser = shlex.split(arg)
-                        if len(parser) < 3:
-                            print("** attribute name missing **")
-                        elif len(parser) < 4:
-                            print("** attribute value missing **")
-                        elif parser[2] not in whitelist:
-                            obj.__dict__[parser[2]] = parser[3]
-                            obj.__dict__['updated_at'] = datetime.now()
-                            storage.save()
-                else:
-                    print("** no instance found **")
-            else:
-                print("** instance id missing **")
+            return False
+        if args2[0] not in classes:
+            print("** class doesn't exist **")
+            return False
+        if args2.__len__() == 1:
+            print("** instance id missing **")
+            return False
+        if "{class_name}.{id}".format(class_name=args2[0], id=args2[1])\
+                not in objects.keys():
+            print("** no instance found **")
+            return False
+        if len(args2) == 2:
+            print("** attribute name missing **")
+            return False
+        if len(args2) == 3:
+            try:
+                type(eval(args2[2])) != dict
+            except NameError:
+                print("** value missing **")
+                return False
+        if len(args2) == 4:
+            obj = objects["{class_name}.{id}".format(
+                class_name=args2[0], id=args2[1])]
+            # convert the data type of the value correctly
+            obj.__dict__[args2[2]] = eval(args2[3])
+            obj.__dict__['updated_at'] = datetime.now()
+            storage.save()
 
-    def do_count(self, clsName):
+        elif type(eval(args2[2])) == dict:
+            whitelist = ['created_at', 'updated_at', 'id']
+            obj = objects["{class_name}.{id}".format(
+                class_name=args2[0], id=args2[1])]
+            for k, v in eval(args2[2]).items():
+                if (k in obj.__class__.__dict__.keys() and
+                        type(obj.__class__.__dict__[k]) in {str, int, float}
+                        and k not in whitelist):
+                    obj.__dict__[k] = eval(v)
+                    # convert the data type correctly
+                else:
+                    # convert the data type correctly
+                    obj.__dict__[k] = eval(v)
+            obj.__dict__['updated_at'] = datetime.now()
+            storage.save()
+
+    def do_count(self, args):
         """Retrieves number of instances of a class"""
         count = 0
+        arguments_list = eval_args(args)
         objs = storage.all()
         for k in objs.keys():
-            myList = k.split('.')
-            if myList[0] == clsName:
+            my_list = k.split('.')
+            if my_list[0] == arguments_list[0]:
                 count += 1
         print(count)
 
