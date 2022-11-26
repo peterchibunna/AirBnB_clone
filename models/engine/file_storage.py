@@ -4,6 +4,7 @@ Module: FileStorage
 """
 import os
 import json
+from datetime import datetime
 
 
 class FileStorage(object):
@@ -54,3 +55,44 @@ class FileStorage(object):
             obj_dict = {k: self.classes()[v["__class__"]](**v)
                         for k, v in _obj_dict.items()}
             FileStorage.__objects = obj_dict
+
+    def attrs(self):
+        """Returns the valid attributes and
+        their types for classname in tests"""
+        return {
+            "BaseModel": {
+                "id": str,
+                "created_at": datetime,
+                "updated_at": datetime
+            },
+            "User": {
+                "email": str,
+                "password": str,
+                "first_name": str,
+                "last_name": str
+            },
+            "State": {"name": str},
+            "City": {
+                "state_id": str,
+                "name": str
+            },
+            "Amenity": {"name": str},
+            "Place": {
+                "city_id": str,
+                "user_id": str,
+                "name": str,
+                "description": str,
+                "number_rooms": int,
+                "number_bathrooms": int,
+                "max_guest": int,
+                "price_by_night": int,
+                "latitude": float,
+                "longitude": float,
+                "amenity_ids": list
+            },
+            "Review": {
+                "place_id": str,
+                "user_id": str,
+                "text": str
+            }
+        }
