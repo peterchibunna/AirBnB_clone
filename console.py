@@ -200,7 +200,10 @@ class HBNBCommand(cmd.Cmd):
                 if (k in obj.__class__.__dict__.keys() and
                         type(obj.__class__.__dict__[k]) in {str, int, float}
                         and k not in whitelist):
-                    obj.__dict__[k] = eval(v.__str__())
+                    try:
+                        obj.__dict__[k] = eval(v.__str__())
+                    except NameError:
+                        obj.__dict__[k] = v.__str__()
                     # convert the data type correctly
                 else:
                     # convert the data type correctly
