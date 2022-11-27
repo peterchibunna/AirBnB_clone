@@ -67,12 +67,12 @@ class HBNBCommand(cmd.Cmd):
 
     def do_EOF(self, arg):
         """Exits the program"""
-        quit()
+        # quit()
         return (1)
 
     def do_quit(self, arg):
         """Exits the program"""
-        quit()
+        # quit()
         return (1)
 
     def do_help(self, args):
@@ -94,10 +94,8 @@ class HBNBCommand(cmd.Cmd):
         inst.save()
 
     def do_show(self, arg):
-        """
-        Prints string representation of an instance
-        based on the class name and id
-        """
+        """Prints string representation of an instance
+        based on the class name and id"""
         args = shlex.split(arg)
         if len(args) == 0:
             print("** class name missing **")
@@ -132,13 +130,11 @@ class HBNBCommand(cmd.Cmd):
             else:
                 print("** instance id missing **")
         else:
-            print("**class doesn't exist **")
+            print("** class doesn't exist **")
 
     def do_all(self, arg):
-        """
-        Prints all string representation of all instances
-        based or not on the class name
-        """
+        """Prints all string representation of all instances
+        based or not on the class name"""
         args = shlex.split(arg)
         my_list = list()
         if len(args) == 0:
@@ -158,13 +154,11 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_update(self, arg):
-        """
-        Updates an instance based on the class name and id
-        by adding or updating attribute
-        """
+        """Updates an instance based on the class name and
+        id by adding or updating attribute"""
         args2 = eval_args(arg)
         objects = storage.all()
-        print(args2)
+        # print(args2)
         if len(args2) == 0:
             print("** class name missing **")
             return False
@@ -174,7 +168,7 @@ class HBNBCommand(cmd.Cmd):
         if args2.__len__() == 1:
             print("** instance id missing **")
             return False
-        if "{class_name}.{id}".format(class_name=args2[0], id=args2[1])\
+        if "{class_name}.{id}".format(class_name=args2[0], id=args2[1]) \
                 not in objects.keys():
             print("** no instance found **")
             return False
@@ -191,7 +185,10 @@ class HBNBCommand(cmd.Cmd):
             obj = objects["{class_name}.{id}".format(
                 class_name=args2[0], id=args2[1])]
             # convert the data type of the value correctly
-            obj.__dict__[args2[2]] = eval(args2[3])
+            try:
+                obj.__dict__[args2[2]] = eval(args2[3])
+            except NameError as e:
+                obj.__dict__[args2[2]] = args2[3]
             obj.__dict__['updated_at'] = datetime.now()
             storage.save()
 
@@ -203,11 +200,14 @@ class HBNBCommand(cmd.Cmd):
                 if (k in obj.__class__.__dict__.keys() and
                         type(obj.__class__.__dict__[k]) in {str, int, float}
                         and k not in whitelist):
-                    obj.__dict__[k] = eval(v)
+                    obj.__dict__[k] = eval(v.__str__())
                     # convert the data type correctly
                 else:
                     # convert the data type correctly
-                    obj.__dict__[k] = eval(v)
+                    try:
+                        obj.__dict__[k] = eval(v)
+                    except NameError as e:
+                        obj.__dict__[k] = v
             obj.__dict__['updated_at'] = datetime.now()
             storage.save()
 
