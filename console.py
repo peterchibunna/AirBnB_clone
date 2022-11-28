@@ -206,14 +206,14 @@ class HBNBCommand(cmd.Cmd):
                         and k not in whitelist):
                     try:
                         obj.__dict__[k] = eval(v.__str__())
-                    except NameError:
+                    except (NameError, TypeError):
                         obj.__dict__[k] = v.__str__()
                     # convert the data type correctly
                 else:
                     # convert the data type correctly
                     try:
                         obj.__dict__[k] = eval(v)
-                    except NameError as e:
+                    except (NameError, TypeError) as e:
                         obj.__dict__[k] = v
             obj.__dict__['updated_at'] = datetime.now()
             storage.save()
