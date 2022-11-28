@@ -75,6 +75,10 @@ class HBNBCommand(cmd.Cmd):
         # quit()
         return (1)
 
+    def emptyline(self):
+        """empty line should not do anything"""
+        pass
+
     def do_help(self, args):
         """Gives details about commands"""
         cmd.Cmd.do_help(self, args)
