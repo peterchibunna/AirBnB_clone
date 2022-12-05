@@ -1,12 +1,12 @@
 header {
-    background-color: #fff;
-    height: 70px;
+    color: white;
+    height: 60px;
     width: 100%;
-    border-bottom: 1px solid #cccccc;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    background-image: url("../images/logo.png");
-    background-repeat: no-repeat;
-    background-position: 20px 50%;
+    border-bottom: 1px #cccccc;
+}
+
+.logo {
+    background-image: url(../images/logo.png);
+    position: absolute;
+    left: 20px;
 }
