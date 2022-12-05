@@ -83,13 +83,13 @@ article > .amenities > ul > li {
     background-size: contain;
     line-height: 35px;
 }
-
 article > .amenities > ul > li.tv {
     background-image: url("../images/icon_tv.png");
 }
 article > .amenities > ul > li.wifi {
     background-image: url("../images/icon_wifi.png");
-}article > .amenities > ul > li.pets {
+}
+article > .amenities > ul > li.pets {
     background-image: url("../images/icon_pets.png");
 }
 article > .reviews > ul {
